@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
+import java.time.Duration
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 
@@ -13,6 +15,9 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor() : ViewModel() {
     val currentTimeMillis: Long
         get() = System.currentTimeMillis()
+    val currentDateTime: LocalDateTime
+        get() = LocalDateTime.now()
+
     var selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
     var selectedTime = MutableStateFlow<LocalTime>(LocalTime.now())
     var selectedWhere = MutableStateFlow<String>("")
@@ -44,6 +49,21 @@ class MainViewModel @Inject constructor() : ViewModel() {
     fun onSaveClick() {
         schedule.value.canSave {
             Timber.e("save ${it}")
+            val diff = Duration.between(currentDateTime, it.getDateTime())
+            val diffMinute = diff.toMinutes()
+            val diffDay = diff.toDays()
+            val hour = diff.toHours()
+            Timber.e("diffDay: ${diffDay} \n diffHour : $hour\n diffMinute ${diffMinute}")
+            val savedSchedule = SavedSchedule(
+                it,
+                diffMinute,
+                0,
+                diffMinute.toAlarmTimes(
+                    currentDateTime,
+                    it.getDateTime()
+                )
+            )
+            Timber.e("savedSchedule: ${savedSchedule}")
         }
     }
 }

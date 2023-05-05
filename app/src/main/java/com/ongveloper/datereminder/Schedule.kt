@@ -1,6 +1,7 @@
 package com.ongveloper.datereminder
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 
 data class Schedule(
@@ -21,7 +22,8 @@ data class Schedule(
 }
 
 fun Schedule?.canSave(block: (Schedule) -> Unit){
-//    Timber.e("save Click ${this == null} ${this!!.isRightDateTime.not()} ${this!!.isRightContents.not()}")
     if(this == null || isRightDateTime.not() || isRightContents.not()) return
     block(this)
 }
+
+fun Schedule.getDateTime(): LocalDateTime = LocalDateTime.of(date,time)
