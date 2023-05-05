@@ -1,18 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+    <data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+            name="vm"
+            type="com.ongveloper.datereminder.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:onDateChanged="@{(view, year, monthOfYear, dayOfMonth) -> vm.onDateChanged(year, monthOfYear, dayOfMonth)}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onTimeChanged="@{(view, hour, minute) -> vm.onTimeChanged(hour, minute)}"
+            android:timePickerMode="spinner"
+            app:layout_constraintTop_toBottomOf="@id/datePicker"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/whereTextInputEditTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="where"
+            android:text="@={vm.selectedWhere}"
+            app:layout_constraintTop_toBottomOf="@id/timePicker"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="aibodmioavjiodfjia" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/whatTextInputEditTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="what"
+            android:text="@={vm.selectedWhat}"
+            app:layout_constraintTop_toBottomOf="@id/whereTextInputEditTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="abcabkjoocmnaoib" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
