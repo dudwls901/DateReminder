@@ -32,6 +32,15 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 launch {
+                    mainEvent.collectLatest {
+                        when(it){
+                            is MainState.SaveSchedule ->{
+                                Timber.e("MainState ${it}")
+                            }
+                        }
+                    }
+                }
+                launch {
                     schedule.collectLatest {
                         Timber.e("schedule: ${it}")
                     }

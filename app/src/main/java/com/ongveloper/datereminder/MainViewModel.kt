@@ -3,7 +3,9 @@ package com.ongveloper.datereminder
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.time.Duration
 import java.time.LocalDate
@@ -38,6 +40,11 @@ class MainViewModel @Inject constructor() : ViewModel() {
         null
     )
 
+    val mainEvent = MutableSharedFlow<MainState>(
+        extraBufferCapacity = 1,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
+
     fun onDateChanged(year: Int, monthOfYear: Int, dayOfMonth: Int) {
         selectedDate.value = LocalDate.of(year, monthOfYear + 1, dayOfMonth)
     }
@@ -63,7 +70,11 @@ class MainViewModel @Inject constructor() : ViewModel() {
                     it.getDateTime()
                 )
             )
-            Timber.e("savedSchedule: ${savedSchedule}")
+            viewModelScope.launch {
+                mainEvent.emit(
+                    MainState.SaveSchedule(savedSchedule)
+                )
+            }
         }
     }
 }
