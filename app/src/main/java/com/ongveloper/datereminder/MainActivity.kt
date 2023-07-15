@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
                 launch {
                     mainEvent.collectLatest {
                         when(it){
-                            is MainState.SaveSchedule ->{
-                                Timber.e("MainState ${it}")
+                            is MainEvent.SaveSchedule ->{
+                                Timber.e("MainEvent ${it}")
                                 registerAlarm(it.schedule)
                             }
                         }

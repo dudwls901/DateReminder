@@ -44,7 +44,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
         null
     )
 
-    val mainEvent = MutableSharedFlow<MainState>(
+    val mainEvent = MutableSharedFlow<MainEvent>(
         extraBufferCapacity = 1,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
@@ -77,7 +77,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
             )
             viewModelScope.launch {
                 mainEvent.emit(
-                    MainState.SaveSchedule(schedule)
+                    MainEvent.SaveSchedule(schedule)
                 )
             }
         }
