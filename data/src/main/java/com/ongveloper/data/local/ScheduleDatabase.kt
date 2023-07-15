@@ -7,6 +7,8 @@ import com.ongveloper.data.local.dao.ScheduleDao
 import com.ongveloper.data.local.dto.AlarmTimesTypeConverter
 import com.ongveloper.data.local.dto.ScheduleEntity
 
+const val SCHEDULE_DB_NAME = "SCHEDULE_DB"
+
 @Database(
     entities = [ScheduleEntity::class],
     version = 1,
