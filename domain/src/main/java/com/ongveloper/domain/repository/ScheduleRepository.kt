@@ -8,8 +8,8 @@ interface ScheduleRepository {
 
     fun getSchedulesFlow(): Flow<List<Schedule>>
 
-    suspend fun insertSchedule(schedule: Schedule): Int
+    suspend fun insertSchedule(schedule: Schedule): Long
 
-    suspend fun deleteSchedule(id: Long): Int
+    suspend fun deleteSchedule(id: Long): Long
 
 }

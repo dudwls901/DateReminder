@@ -18,7 +18,7 @@ interface ScheduleDao {
     fun getSchedulesFlow(): Flow<List<ScheduleEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertSchedule(scheduleEntity: ScheduleEntity): Int
+    suspend fun insertSchedule(scheduleEntity: ScheduleEntity): Long
 
     /**
      * 삭제된 행의 수 return
@@ -26,5 +26,5 @@ interface ScheduleDao {
     @Query("DELETE FROM $SCHEDULE_TABLE WHERE id = :id")
     suspend fun deleteSchedule(
         id: Long,
-    ): Int
+    ): Long
 }

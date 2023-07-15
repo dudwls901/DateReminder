@@ -7,8 +7,8 @@ interface ScheduleLocalDataSource {
 
     fun getSchedulesFlow(): Flow<List<ScheduleEntity>>
 
-    suspend fun insertSchedule(scheduleEntity: ScheduleEntity): Int
+    suspend fun insertSchedule(scheduleEntity: ScheduleEntity): Long
 
-    suspend fun deleteSchedule(id: Long): Int
+    suspend fun deleteSchedule(id: Long): Long
 
 }
