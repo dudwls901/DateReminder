@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder
+package com.ongveloper.presentation
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -16,6 +16,19 @@ class AlarmReceiver : BroadcastReceiver() {
             * 1. 알람 창 띄우기
             * 2. 진동 등의 알람 설정
             * */
+            startActivity(context)
         }
+    }
+    private fun startActivity(context: Context){
+//        val intentt = Intent(
+//            context, AlarmActivity::class.java,
+//        ).apply {
+//            action = Intent.ACTION_VIEW
+//            flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+//        }
+////            pendingIntent.send()
+//        context.startActivity(
+//            intentt
+//        )
     }
 }

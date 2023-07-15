@@ -13,6 +13,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DateReminder"
-include ':app'
 include ':domain'
 include ':data'
+include ':app'
+include ':presentation'

@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder
+package com.ongveloper.presentation
 
 const val ALARM_COUNT = 3
 const val PENDING_INTENT_ALARM_CODE = 1

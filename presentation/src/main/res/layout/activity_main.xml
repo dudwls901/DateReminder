@@ -7,13 +7,13 @@
 
         <variable
             name="vm"
-            type="com.ongveloper.datereminder.MainViewModel" />
+            type="com.ongveloper.presentation.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context="com.ongveloper.presentation.MainActivity">
 
         <DatePicker
             android:id="@+id/datePicker"

@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder
+package com.ongveloper.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,6 +6,9 @@ import com.ongveloper.domain.model.Schedule
 import com.ongveloper.domain.model.ScheduleParams
 import com.ongveloper.domain.model.canSave
 import com.ongveloper.domain.model.getDateTime
+import com.ongveloper.domain.usecase.DeleteScheduleUseCase
+import com.ongveloper.domain.usecase.GetSchedulesFlowUseCase
+import com.ongveloper.domain.usecase.InsertScheduleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
@@ -18,7 +21,11 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel @Inject constructor(
+    getSchedules: GetSchedulesFlowUseCase,
+    private val insertScheduleUseCase: InsertScheduleUseCase,
+    private val deleteScheduleUseCase: DeleteScheduleUseCase,
+) : ViewModel() {
     val currentTimeMillis: Long
         get() = System.currentTimeMillis()
     val currentDateTime: LocalDateTime
@@ -43,6 +50,16 @@ class MainViewModel @Inject constructor() : ViewModel() {
         SharingStarted.WhileSubscribed(5000L),
         null
     )
+
+    val schedules = getSchedules().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000L),
+        null
+    )
+
+    private val _mainState: MutableStateFlow<MainState> = MutableStateFlow(MainState.Init)
+    val mainState: StateFlow<MainState>
+        get() = _mainState.asStateFlow()
 
     val mainEvent = MutableSharedFlow<MainEvent>(
         extraBufferCapacity = 1,
@@ -75,10 +92,15 @@ class MainViewModel @Inject constructor() : ViewModel() {
                 ),
                 false
             )
+            Timber.e("schedule: ${schedule}")
             viewModelScope.launch {
-                mainEvent.emit(
-                    MainEvent.SaveSchedule(schedule)
-                )
+                insertScheduleUseCase(schedule).onSuccess {
+                    mainEvent.emit(
+                        MainEvent.SaveSchedule(schedule)
+                    )
+                }.onFailure {
+
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder.di
+package com.ongveloper.datereminder.module
 
 import android.content.Context
 import androidx.room.Room
@@ -29,7 +29,7 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDiaryDao(
+    fun provideScheduleDao(
         scheduleDatabase: ScheduleDatabase,
     ): ScheduleDao {
         return scheduleDatabase.scheduleDao()

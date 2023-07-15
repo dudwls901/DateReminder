@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder
+package com.ongveloper.presentation
 
 import com.ongveloper.domain.model.Schedule
 

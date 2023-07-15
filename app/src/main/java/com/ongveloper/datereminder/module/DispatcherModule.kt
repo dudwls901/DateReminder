@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder.di
+package com.ongveloper.datereminder.module
 
 import dagger.Module
 import dagger.Provides

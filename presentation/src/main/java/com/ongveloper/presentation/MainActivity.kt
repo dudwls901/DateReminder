@@ -1,4 +1,4 @@
-package com.ongveloper.datereminder
+package com.ongveloper.presentation
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.ongveloper.datereminder.databinding.ActivityMainBinding
 import com.ongveloper.domain.model.Schedule
+import com.ongveloper.presentation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -44,6 +44,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.vm = viewModel
         binding.lifecycleOwner = this
+        //권한 없으면 알람 띄운 다음에 보내기
+//        if (!Settings.canDrawOverlays(this)) {
+//            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+//            startActivityForResult(intent, 0)
+//        }
 
         initViews()
         initObservers()
@@ -67,6 +72,11 @@ class MainActivity : AppCompatActivity() {
                         Timber.e("schedule: ${it}")
                     }
                 }
+                launch {
+//                    schedules.collectLatest {
+//                        Timber.e("schedules : ${it}")
+//                    }
+                }
             }
         }
     }
@@ -76,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         * 1. 알람 db에 저장
         * 2. 3번의 알람 설정 -> 한 번에 3번 다 설정하든, 한 번 울리면 그 다음 알람 설정하든
         * */
-        val triggerTime = System.currentTimeMillis() + 1000L * 40
+        val triggerTime = System.currentTimeMillis() + 1000L * 10
         Timber.e("알람 울릴 시간 ${Instant.ofEpochMilli(triggerTime).atZone(ZoneId.systemDefault()).toLocalDateTime()}")
         Toast.makeText(this, "${Instant.ofEpochMilli(triggerTime).atZone(ZoneId.systemDefault()).toLocalDateTime()}", Toast.LENGTH_SHORT).show()
         alarmManager.set(
