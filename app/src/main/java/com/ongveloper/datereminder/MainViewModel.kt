@@ -66,13 +66,14 @@ class MainViewModel @Inject constructor() : ViewModel() {
             val hour = diff.toHours()
             Timber.e("diffDay: ${diffDay} \n diffHour : $hour\n diffMinute ${diffMinute}")
             val schedule = Schedule(
+                0,
                 it,
                 diffMinute,
-                0,
                 diffMinute.toAlarmTimes(
                     currentDateTime,
                     it.getDateTime()
-                )
+                ),
+                false
             )
             viewModelScope.launch {
                 mainEvent.emit(
