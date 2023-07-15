@@ -1,5 +1,6 @@
 package com.ongveloper.presentation
 
+const val ALARM_ACTION = "reminder"
 const val ALARM_COUNT = 3
-const val PENDING_INTENT_ALARM_CODE = 1
-const val ALARM_CODE = "ALARM_CODE"
+const val ALARM_CODE_VALUE = 1
+const val ALARM_CODE_KEY = "ALARM_CODE"

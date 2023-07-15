@@ -4,7 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,11 +33,12 @@ class MainActivity : AppCompatActivity() {
 //    PendingIntent.FLAG_UPDATED_CURRENT : 있으면 가져오고 없으면 만듦
     private val alarmIntent: Intent by lazy{
         Intent(this, AlarmReceiver::class.java).apply {
-            putExtra(ALARM_CODE, PENDING_INTENT_ALARM_CODE)
+            putExtra(ALARM_CODE_KEY, ALARM_CODE_VALUE)
+            action = "Reminder"
         }
     }
     private val pendingIntent: PendingIntent by lazy {
-        PendingIntent.getBroadcast(this, PENDING_INTENT_ALARM_CODE, alarmIntent,
+        PendingIntent.getBroadcast(this, ALARM_CODE_VALUE, alarmIntent,
             PendingIntent.FLAG_IMMUTABLE)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,10 +48,10 @@ class MainActivity : AppCompatActivity() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
         //권한 없으면 알람 띄운 다음에 보내기
-//        if (!Settings.canDrawOverlays(this)) {
-//            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-//            startActivityForResult(intent, 0)
-//        }
+        if (!Settings.canDrawOverlays(this)) {
+            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+            startActivityForResult(intent, 0)
+        }
 
         initViews()
         initObservers()

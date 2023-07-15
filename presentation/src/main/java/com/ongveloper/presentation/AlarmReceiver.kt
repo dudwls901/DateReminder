@@ -7,10 +7,10 @@ import timber.log.Timber
 
 
 class AlarmReceiver : BroadcastReceiver() {
-
     override fun onReceive(context: Context, intent: Intent) {
-        val requestCode = intent.extras?.getInt(ALARM_CODE)
-        if (requestCode == PENDING_INTENT_ALARM_CODE) {
+        if(intent.action != ALARM_ACTION) return
+        val requestCode = intent.extras?.getInt(ALARM_CODE_KEY)
+        if (requestCode == ALARM_CODE_VALUE) {
             Timber.e("알람 받기 완료")
             /*todo
             * 1. 알람 창 띄우기
@@ -19,16 +19,16 @@ class AlarmReceiver : BroadcastReceiver() {
             startActivity(context)
         }
     }
-    private fun startActivity(context: Context){
-//        val intentt = Intent(
-//            context, AlarmActivity::class.java,
-//        ).apply {
-//            action = Intent.ACTION_VIEW
-//            flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-//        }
-////            pendingIntent.send()
-//        context.startActivity(
-//            intentt
-//        )
+
+    private fun startActivity(context: Context) {
+        val intentt = Intent(
+            context, AlarmActivity::class.java,
+        ).apply {
+            action = Intent.ACTION_VIEW
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(
+            intentt
+        )
     }
 }
