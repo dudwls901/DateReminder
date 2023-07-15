@@ -1,9 +1,9 @@
-package com.ongveloper.datereminder
+package com.ongveloper.domain.model
 
 import java.time.LocalDateTime
 
-data class SavedSchedule(
-    val schedule: Schedule,
+data class Schedule(
+    val scheduleParams: ScheduleParams,
     val diffMinutes: Long,
     val idx: Int,
     val alarmTimes: List<LocalDateTime>

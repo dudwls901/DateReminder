@@ -2,6 +2,10 @@ package com.ongveloper.datereminder
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ongveloper.domain.model.Schedule
+import com.ongveloper.domain.model.ScheduleParams
+import com.ongveloper.domain.model.canSave
+import com.ongveloper.domain.model.getDateTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
@@ -25,10 +29,10 @@ class MainViewModel @Inject constructor() : ViewModel() {
     var selectedWhere = MutableStateFlow<String>("")
     var selectedWhat = MutableStateFlow<String>("")
 
-    val schedule: StateFlow<Schedule?> = combine(
+    val scheduleParams: StateFlow<ScheduleParams?> = combine(
         selectedDate, selectedTime, selectedWhere, selectedWhat
     ) { date, time, where, what ->
-        Schedule(
+        ScheduleParams(
             date,
             time,
             where,
@@ -54,14 +58,14 @@ class MainViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onSaveClick() {
-        schedule.value.canSave {
+        scheduleParams.value.canSave {
             Timber.e("save ${it}")
             val diff = Duration.between(currentDateTime, it.getDateTime())
             val diffMinute = diff.toMinutes()
             val diffDay = diff.toDays()
             val hour = diff.toHours()
             Timber.e("diffDay: ${diffDay} \n diffHour : $hour\n diffMinute ${diffMinute}")
-            val savedSchedule = SavedSchedule(
+            val schedule = Schedule(
                 it,
                 diffMinute,
                 0,
@@ -72,7 +76,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
             )
             viewModelScope.launch {
                 mainEvent.emit(
-                    MainState.SaveSchedule(savedSchedule)
+                    MainState.SaveSchedule(schedule)
                 )
             }
         }

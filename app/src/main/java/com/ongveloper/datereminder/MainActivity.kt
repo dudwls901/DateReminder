@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.ongveloper.datereminder.databinding.ActivityMainBinding
+import com.ongveloper.domain.model.Schedule
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -56,13 +57,13 @@ class MainActivity : AppCompatActivity() {
                         when(it){
                             is MainState.SaveSchedule ->{
                                 Timber.e("MainState ${it}")
-                                registerAlarm(it.savedSchedule)
+                                registerAlarm(it.schedule)
                             }
                         }
                     }
                 }
                 launch {
-                    schedule.collectLatest {
+                    scheduleParams.collectLatest {
                         Timber.e("schedule: ${it}")
                     }
                 }
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun registerAlarm(savedSchedule: SavedSchedule) {
+    private fun registerAlarm(schedule: Schedule) {
         /*todo
         * 1. 알람 db에 저장
         * 2. 3번의 알람 설정 -> 한 번에 3번 다 설정하든, 한 번 울리면 그 다음 알람 설정하든

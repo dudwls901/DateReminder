@@ -1,10 +1,10 @@
-package com.ongveloper.datereminder
+package com.ongveloper.domain.model
 
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-data class Schedule(
+data class ScheduleParams(
     val date: LocalDate,
     val time: LocalTime,
     val where: String,
@@ -21,9 +21,9 @@ data class Schedule(
         get() = where.isNotBlank() && what.isNotBlank()
 }
 
-fun Schedule?.canSave(block: (Schedule) -> Unit){
+fun ScheduleParams?.canSave(block: (ScheduleParams) -> Unit){
     if(this == null || isRightDateTime.not() || isRightContents.not()) return
     block(this)
 }
 
-fun Schedule.getDateTime(): LocalDateTime = LocalDateTime.of(date,time)
+fun ScheduleParams.getDateTime(): LocalDateTime = LocalDateTime.of(date,time)
