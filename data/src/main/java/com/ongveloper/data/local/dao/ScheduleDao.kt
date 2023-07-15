@@ -14,7 +14,7 @@ interface ScheduleDao {
 //    @Query("SELECT * FROM $SCHEDULE_TABLE WHERE date like :date ORDER BY date DESC")
 //    fun getSchedulesFlow(date: String): Flow<List<ScheduleEntity>>
 
-    @Query("SELECT * FROM $SCHEDULE_TABLE ORDER BY date DESC")
+    @Query("SELECT * FROM $SCHEDULE_TABLE ORDER BY id DESC")
     fun getSchedulesFlow(): Flow<List<ScheduleEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,5 +26,5 @@ interface ScheduleDao {
     @Query("DELETE FROM $SCHEDULE_TABLE WHERE id = :id")
     suspend fun deleteSchedule(
         id: Long,
-    ): Long
+    ): Int
 }

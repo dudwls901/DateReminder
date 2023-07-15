@@ -18,6 +18,6 @@ class ScheduleLocalDataSourceImpl @Inject constructor(
         scheduleDao.insertSchedule(scheduleEntity)
 
 
-    override suspend fun deleteSchedule(id: Long): Long =
+    override suspend fun deleteSchedule(id: Long): Int =
         scheduleDao.deleteSchedule(id)
 }

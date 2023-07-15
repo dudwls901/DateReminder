@@ -9,6 +9,6 @@ interface ScheduleLocalDataSource {
 
     suspend fun insertSchedule(scheduleEntity: ScheduleEntity): Long
 
-    suspend fun deleteSchedule(id: Long): Long
+    suspend fun deleteSchedule(id: Long): Int
 
 }

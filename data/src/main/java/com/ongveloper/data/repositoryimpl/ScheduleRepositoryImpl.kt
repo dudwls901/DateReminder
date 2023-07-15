@@ -22,6 +22,6 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun insertSchedule(schedule: Schedule): Long =
         scheduleLocalDataSource.insertSchedule(schedule.toEntity())
 
-    override suspend fun deleteSchedule(id: Long): Long =
+    override suspend fun deleteSchedule(id: Long): Int =
         scheduleLocalDataSource.deleteSchedule(id)
 }

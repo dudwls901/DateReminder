@@ -45,7 +45,7 @@ fun Schedule.toEntity(): ScheduleEntity = ScheduleEntity(
     isFinished,
 )
 
-class AlarmTimesTypeConverter {
+class ScheduleTypeConverter {
 
     private val json = Json {
         isLenient = true
@@ -62,4 +62,15 @@ class AlarmTimesTypeConverter {
     fun listToJson(type: List<Long>): String {
         return json.encodeToJsonElement(type).toString()
     }
+
+    @TypeConverter
+    fun jsonToScheduleParams(value: String): ScheduleParams {
+        return json.decodeFromString(ScheduleParams.serializer(), value)
+    }
+
+    @TypeConverter
+    fun scheduleParamsToJson(type: ScheduleParams): String {
+        return json.encodeToJsonElement(type).toString()
+    }
+
 }
