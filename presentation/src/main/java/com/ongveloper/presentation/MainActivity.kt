@@ -1,5 +1,6 @@
 package com.ongveloper.presentation
 
+import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -8,11 +9,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ongveloper.domain.model.Schedule
 import com.ongveloper.presentation.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,8 +34,19 @@ class MainActivity : AppCompatActivity() {
     private val alarmManager: AlarmManager by lazy {
         this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
-//    PendingIntent.FLAG_UPDATED_CURRENT : 있으면 가져오고 없으면 만듦
-    private val alarmIntent: Intent by lazy{
+    private lateinit var overlayPermissionLauncher: ActivityResultLauncher<Intent>
+    private val overDrawOverlayPermissionDialog: MaterialAlertDialogBuilder by lazy {
+        MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.main_overlay_permission_alert_title))
+                .setMessage(getString(R.string.main_overlay_permission_alert_body))
+                .setCancelable(false)
+                .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                    requestOverDrawOverlayPermission()
+                }
+    }
+
+    //    PendingIntent.FLAG_UPDATED_CURRENT : 있으면 가져오고 없으면 만듦
+    private val alarmIntent: Intent by lazy {
         Intent(this, AlarmReceiver::class.java).apply {
             putExtra(ALARM_CODE_KEY, ALARM_CODE_VALUE)
             action = "Reminder"
@@ -39,31 +54,44 @@ class MainActivity : AppCompatActivity() {
     }
     private val pendingIntent: PendingIntent by lazy {
         PendingIntent.getBroadcast(this, ALARM_CODE_VALUE, alarmIntent,
-            PendingIntent.FLAG_IMMUTABLE)
+                PendingIntent.FLAG_IMMUTABLE)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-        //권한 없으면 알람 띄운 다음에 보내기
-        if (!Settings.canDrawOverlays(this)) {
-            val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
-            startActivityForResult(intent, 0)
+
+        //반드시 onCreate (STARTED 이전)에서 초기화
+        overlayPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode != Activity.RESULT_OK) processOverDrawOverlayPermission()
         }
+        processOverDrawOverlayPermission()
 
         initViews()
         initObservers()
     }
 
-    private fun initObservers() = with(viewModel){
+    private fun processOverDrawOverlayPermission() {
+        if (!Settings.canDrawOverlays(this)) {
+            overDrawOverlayPermissionDialog.show()
+        }
+    }
+
+    private fun requestOverDrawOverlayPermission() {
+        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+        overlayPermissionLauncher.launch(intent)
+    }
+
+    private fun initObservers() = with(viewModel) {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     mainEvent.collectLatest {
-                        when(it){
-                            is MainEvent.SaveSchedule ->{
+                        when (it) {
+                            is MainEvent.SaveSchedule -> {
                                 Timber.e("MainEvent ${it}")
                                 registerAlarm(it.schedule)
                             }
@@ -76,9 +104,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 launch {
-//                    schedules.collectLatest {
-//                        Timber.e("schedules : ${it}")
-//                    }
+                    //                    schedules.collectLatest {
+                    //                        Timber.e("schedules : ${it}")
+                    //                    }
                 }
             }
         }
@@ -93,15 +121,15 @@ class MainActivity : AppCompatActivity() {
         Timber.e("알람 울릴 시간 ${Instant.ofEpochMilli(triggerTime).atZone(ZoneId.systemDefault()).toLocalDateTime()}")
         Toast.makeText(this, "${Instant.ofEpochMilli(triggerTime).atZone(ZoneId.systemDefault()).toLocalDateTime()}", Toast.LENGTH_SHORT).show()
         alarmManager.set(
-            AlarmManager.RTC_WAKEUP,
-            triggerTime,
-            pendingIntent
+                AlarmManager.RTC_WAKEUP,
+                triggerTime,
+                pendingIntent
         )
     }
 
-    private fun initViews() = with(binding){
+    private fun initViews() = with(binding) {
         datePicker.minDate = viewModel.currentTimeMillis
-        Timber.e("year: ${datePicker.year} month: ${datePicker.month+1} day: ${datePicker.dayOfMonth}")
+        Timber.e("year: ${datePicker.year} month: ${datePicker.month + 1} day: ${datePicker.dayOfMonth}")
         Timber.e("hour: ${timePicker.hour} minute: ${timePicker.minute}")
     }
 }

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">DateReminder</string>
+    <string name="ok">@android:string/ok</string>
+    <string name="main_overlay_permission_alert_title">권한 요청</string>
+    <string name="main_overlay_permission_alert_body">설정한 알람이 동작하기 위해서는 \'다른앱 위에 그리기\' 설정이 필요합니다.</string>
 </resources>
