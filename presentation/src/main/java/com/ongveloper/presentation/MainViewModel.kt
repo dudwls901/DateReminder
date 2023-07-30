@@ -99,7 +99,7 @@ class MainViewModel @Inject constructor(
                         MainEvent.SaveSchedule(schedule)
                     )
                 }.onFailure {
-
+                    Timber.e("fail save schedule")
                 }
             }
         }

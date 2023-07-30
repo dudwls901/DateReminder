@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     private val alarmIntent: Intent by lazy {
         Intent(this, AlarmReceiver::class.java).apply {
             putExtra(ALARM_CODE_KEY, ALARM_CODE_VALUE)
-            action = "Reminder"
+            action = ALARM_ACTION
         }
     }
     private val pendingIntent: PendingIntent by lazy {

@@ -5,10 +5,9 @@ import android.content.Context
 import android.content.Intent
 import timber.log.Timber
 
-
 class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if(intent.action != ALARM_ACTION) return
+        if (intent.action != ALARM_ACTION) return
         val requestCode = intent.extras?.getInt(ALARM_CODE_KEY)
         if (requestCode == ALARM_CODE_VALUE) {
             Timber.e("알람 받기 완료")
@@ -21,14 +20,13 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     private fun startActivity(context: Context) {
-        val intentt = Intent(
-            context, AlarmActivity::class.java,
-        ).apply {
-            action = Intent.ACTION_VIEW
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
         context.startActivity(
-            intentt
+                Intent(
+                        context, AlarmActivity::class.java,
+                ).apply {
+                    action = Intent.ACTION_VIEW
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
         )
     }
 }
