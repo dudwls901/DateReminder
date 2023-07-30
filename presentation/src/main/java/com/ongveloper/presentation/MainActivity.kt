@@ -44,16 +44,14 @@ class MainActivity : AppCompatActivity() {
                     requestOverDrawOverlayPermission()
                 }
     }
-
     //    PendingIntent.FLAG_UPDATED_CURRENT : 있으면 가져오고 없으면 만듦
-    private val alarmIntent: Intent by lazy {
-        Intent(this, AlarmReceiver::class.java).apply {
+    private fun Context.makeAlarmIntent(schedule: Schedule): PendingIntent {
+        val alarmIntent = Intent(this, AlarmReceiver::class.java).apply {
             putExtra(ALARM_CODE_KEY, ALARM_CODE_VALUE)
+            putExtra(SCHEDULE_KEY, schedule.id)
             action = ALARM_ACTION
         }
-    }
-    private val pendingIntent: PendingIntent by lazy {
-        PendingIntent.getBroadcast(this, ALARM_CODE_VALUE, alarmIntent,
+        return PendingIntent.getBroadcast(this, ALARM_CODE_VALUE, alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE)
     }
 
@@ -123,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         alarmManager.set(
                 AlarmManager.RTC_WAKEUP,
                 triggerTime,
-                pendingIntent
+                makeAlarmIntent(schedule)
         )
     }
 

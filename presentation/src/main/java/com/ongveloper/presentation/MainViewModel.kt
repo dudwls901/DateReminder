@@ -96,7 +96,11 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch {
                 insertScheduleUseCase(schedule).onSuccess {
                     mainEvent.emit(
-                        MainEvent.SaveSchedule(schedule)
+                        MainEvent.SaveSchedule(
+                                schedule.copy(
+                                        id = it
+                                )
+                        )
                     )
                 }.onFailure {
                     Timber.e("fail save schedule")
