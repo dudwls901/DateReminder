@@ -9,19 +9,22 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
-    private val scheduleLocalDataSource: ScheduleLocalDataSource,
+        private val scheduleLocalDataSource: ScheduleLocalDataSource,
 ) : ScheduleRepository {
 
+    override suspend fun getSchedule(id: Long): Schedule =
+            scheduleLocalDataSource.getSchedule(id).toDomainModel()
+
     override fun getSchedulesFlow(): Flow<List<Schedule>> =
-        scheduleLocalDataSource.getSchedulesFlow().map { schedules ->
-            schedules.map {
-                it.toDomainModel()
+            scheduleLocalDataSource.getSchedulesFlow().map { schedules ->
+                schedules.map {
+                    it.toDomainModel()
+                }
             }
-        }
 
     override suspend fun insertSchedule(schedule: Schedule): Long =
-        scheduleLocalDataSource.insertSchedule(schedule.toEntity())
+            scheduleLocalDataSource.insertSchedule(schedule.toEntity())
 
     override suspend fun deleteSchedule(id: Long): Int =
-        scheduleLocalDataSource.deleteSchedule(id)
+            scheduleLocalDataSource.deleteSchedule(id)
 }

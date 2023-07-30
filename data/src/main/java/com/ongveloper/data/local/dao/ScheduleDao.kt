@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ScheduleDao {
 
-//    @Query("SELECT * FROM $SCHEDULE_TABLE WHERE date like :date ORDER BY date DESC")
-//    fun getSchedulesFlow(date: String): Flow<List<ScheduleEntity>>
+    @Query("SELECT * FROM $SCHEDULE_TABLE WHERE id like :id")
+    suspend fun getSchedule(id: Long): ScheduleEntity
 
     @Query("SELECT * FROM $SCHEDULE_TABLE ORDER BY id DESC")
     fun getSchedulesFlow(): Flow<List<ScheduleEntity>>
@@ -25,6 +25,6 @@ interface ScheduleDao {
      * */
     @Query("DELETE FROM $SCHEDULE_TABLE WHERE id = :id")
     suspend fun deleteSchedule(
-        id: Long,
+            id: Long,
     ): Int
 }
